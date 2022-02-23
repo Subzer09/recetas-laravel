@@ -11,20 +11,21 @@
 @endsection
 
 @section('content')
-    <h2 class="text-center mb-5">Crear nueva Receta</h2>
+    <h2 class="text-center mb-5">Editar Receta: {{ $receta->titulo }}</h2>
     <div class="row justify-content-center mt-5">
         <div class="col-md-8">
-            <form method="post" action="{{ route('recetas.store') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('recetas.update', ['receta' => $receta->id]) }}" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="form-group">
                     <label for="titulo">Titulo Receta</label>
                     <input
-                        type="text"
-                        name="titulo"
-                        class="form-control @error('titulo') is-invalid @enderror"
-                        id="titulo"
-                        placeholder="Titulo receta"
-                        value="{{ old('titulo') }}"
+                            type="text"
+                            name="titulo"
+                            class="form-control @error('titulo') is-invalid @enderror"
+                            id="titulo"
+                            placeholder="Titulo receta"
+                            value="{{ $receta->titulo }}"
                     >
                     @error('titulo')
                     <span class="invalid-feedback d-block" role="alert">
@@ -36,16 +37,16 @@
                     <label for="categoria">Categoria
                     </label>
                     <select
-                        name="categoria"
-                        id="categoria"
-                        class="form-control @error('categoria') is-invalid @enderror"
+                            name="categoria"
+                            id="categoria"
+                            class="form-control @error('categoria') is-invalid @enderror"
                     >
                         <option value="">Seleccione...</option>
-                        @foreach($categorias as $id => $categoria)
+                        @foreach($categorias as $categoria)
                             <option
-                                value="{{ $id }}" {{ old('categoria') == $id ? 'selected' : '' }}
+                                    value="{{ $categoria->id }}" {{ $receta->categoria_id == $categoria->id ? 'selected' : '' }}
                             >
-                                {{ $categoria }}
+                                {{ $categoria->nombre }}
                             </option>
                         @endforeach
                     </select>
@@ -58,14 +59,14 @@
                 <div class="form-group">
                     <label for="preparacion">Preparacion</label>
                     <input
-                        type="hidden"
-                        id="preparacion"
-                        name="preparacion"
-                        value="{{ old('preparacion') }}"
+                            type="hidden"
+                            id="preparacion"
+                            name="preparacion"
+                            value="{{ $receta->preparacion }}"
                     >
                     <trix-editor
-                        class="trix-content @error('preparacion') is-invalid @enderror"
-                        input="preparacion"></trix-editor>
+                            class="trix-content @error('preparacion') is-invalid @enderror"
+                            input="preparacion"></trix-editor>
                     @error('preparacion')
                     <span class="invalid-feedback d-block" role="alert">
                             <strong>{{ $message }}</strong>
@@ -76,15 +77,15 @@
                 <div class="form-group">
                     <label for="ingredientes">Ingredientes</label>
                     <input
-                        type="hidden"
-                        id="ingredientes"
-                        name="ingredientes"
-                        value="{{ old('ingredientes') }}"
+                            type="hidden"
+                            id="ingredientes"
+                            name="ingredientes"
+                            value="{{ $receta->ingredientes }}"
                     >
 
                     <trix-editor
-                        class="trix-content @error('ingredientes') is-invalid @enderror"
-                        input="ingredientes"></trix-editor>
+                            class="trix-content @error('ingredientes') is-invalid @enderror"
+                            input="ingredientes"></trix-editor>
 
                     @error('ingredientes')
                     <span class="invalid-feedback d-block" role="alert">
@@ -96,11 +97,15 @@
                 <div class="form-group">
                     <label for="imagen">Elige la imagen</label>
                     <input
-                        type="file"
-                        id="imagen"
-                        name="imagen"
-                        class="form-control @error('imagen') is-invalid @enderror"
+                            type="file"
+                            id="imagen"
+                            name="imagen"
+                            class="form-control @error('imagen') is-invalid @enderror"
                     >
+                    <div class="mt-4">
+                        <p>Imagen Actual</p>
+                        <img src="/storage/{{ $receta->imagen }}" style="width: 300px" alt="">
+                    </div>
                     @error('imagen')
                     <span class="invalid-feedback d-block" role="alert">
                             <strong>{{ $message }}</strong>
@@ -110,9 +115,9 @@
 
                 <div class="form-group mt-2">
                     <input
-                        type="submit"
-                        class="btn btn-success"
-                        value="Agregar receta"
+                            type="submit"
+                            class="btn btn-success"
+                            value="Agregar receta"
                     >
                 </div>
             </form>
